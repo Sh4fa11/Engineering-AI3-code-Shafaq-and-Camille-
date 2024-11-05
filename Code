@@ -1,0 +1,56 @@
+#include <Servo.h>
+
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+#define SERVO_PIN 3
+#define GREEN_LED_PIN 6
+#define RED_LED_PIN 7
+#define DOOR_OPEN_ANGLE 90
+#define DOOR_CLOSED_ANGLE 0
+#define DISTANCE_THRESHOLD 500  // 500 cm = 5 meters
+#define TIME_DELAY 5000         // 5 seconds delay in milliseconds
+
+Servo servo;
+long duration;
+int distance;
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  pinMode(RED_LED_PIN, OUTPUT);
+
+  servo.attach(SERVO_PIN); // Attach servo to pin 3
+  servo.write(DOOR_CLOSED_ANGLE); // Start with door closed
+
+  digitalWrite(RED_LED_PIN, HIGH); // Red LED on initially
+  digitalWrite(GREEN_LED_PIN, LOW); // Green LED off initially
+
+  Serial.begin(9600); // For debugging purposes
+}
+
+void loop() {
+  // Measure distance
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  duration = pulseIn(ECHO_PIN, HIGH);
+  distance = duration * 0.034 / 2; // Convert to cm
+
+  if (distance <= DISTANCE_THRESHOLD) { // If distance is within 5 meters
+    servo.write(DOOR_OPEN_ANGLE); // Open the door
+    digitalWrite(GREEN_LED_PIN, HIGH); // Green LED on
+    digitalWrite(RED_LED_PIN, LOW); // Red LED off
+    delay(TIME_DELAY); // Wait for 5 seconds
+  } 
+  else { 
+    servo.write(DOOR_CLOSED_ANGLE); // Close the door
+    digitalWrite(GREEN_LED_PIN, LOW); // Green LED off
+    digitalWrite(RED_LED_PIN, HIGH); // Red LED on
+  }
+
+  delay(500); // Small delay for stability
+}
