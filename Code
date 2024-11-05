@@ -5,7 +5,7 @@
 #define SERVO_PIN 3
 #define GREEN_LED_PIN 6
 #define RED_LED_PIN 7
-#define DOOR_OPEN_ANGLE 90
+#define DOOR_OPEN_ANGLE 130
 #define DOOR_CLOSED_ANGLE 0
 #define DISTANCE_THRESHOLD 500  // 500 cm = 5 meters
 #define TIME_DELAY 5000         // 5 seconds delay in milliseconds
